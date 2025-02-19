@@ -1,101 +1,182 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState, useEffect } from 'react';
+
+export default function FinanceTracker() {
+  const [incomes, setIncomes] = useState([{ amount: '', type: 'salary', customType: '' }]);
+  const [expenses, setExpenses] = useState([{ amount: '', category: 'groceries', customCategory: '' }]);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null;
+  }
+
+  // Handle adding a new income field
+  const addIncome = () => {
+    setIncomes([...incomes, { amount: '', type: 'salary', customType: '' }]);
+  };
+
+  // Handle adding a new expense field
+  const addExpense = () => {
+    setExpenses([...expenses, { amount: '', category: 'groceries', customCategory: '' }]);
+  };
+
+  // Handle income input changes
+  const handleIncomeChange = (index, field, value) => {
+    const updatedIncomes = [...incomes];
+    updatedIncomes[index][field] = value;
+    setIncomes(updatedIncomes);
+  };
+
+  // Handle expense input changes
+  const handleExpenseChange = (index, field, value) => {
+    const updatedExpenses = [...expenses];
+    updatedExpenses[index][field] = value;
+    setExpenses(updatedExpenses);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="bg-gray-100 min-h-screen font-sans">
+      <div className="container mx-auto px-4 py-8">
+        <header className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-800">FinTrack</h1>
+          <p className="text-gray-600 mt-2">Track your income, expenses, and get AI-driven insights.</p>
+        </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Add Your Financial Data</h2>
+
+          {/* Incomes Section */}
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Incomes</h3>
+            {incomes.map((income, index) => (
+              <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Income Amount</label>
+                  <input
+                    type="number"
+                    value={income.amount}
+                    onChange={(e) => handleIncomeChange(index, 'amount', e.target.value)}
+                    placeholder="Enter income amount"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Income Type</label>
+                  <select
+                    value={income.type}
+                    onChange={(e) => handleIncomeChange(index, 'type', e.target.value)}
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-600"
+                  >
+                    <option value="salary">Salary (Job)</option>
+                    <option value="sideHustle">Side Hustle</option>
+                    <option value="freelance">Freelance</option>
+                    <option value="investment">Investment</option>
+                    <option value="other">Other</option>
+                  </select>
+                  {income.type === 'other' && (
+                    <input
+                      type="text"
+                      value={income.customType}
+                      onChange={(e) => handleIncomeChange(index, 'customType', e.target.value)}
+                      placeholder="Specify income type"
+                      className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-50 text-gray-700"
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+            <button
+              onClick={addIncome}
+              className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            >
+              Add Income
+            </button>
+          </div>
+
+          {/* Expenses Section */}
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Expenses</h3>
+            {expenses.map((expense, index) => (
+              <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Expense Amount</label>
+                  <input
+                    type="number"
+                    value={expense.amount}
+                    onChange={(e) => handleExpenseChange(index, 'amount', e.target.value)}
+                    placeholder="Enter expense amount"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Expense Category</label>
+                  <select
+                    value={expense.category}
+                    onChange={(e) => handleExpenseChange(index, 'category', e.target.value)}
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-600"
+                  >
+                    <option value="groceries">Groceries</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="transportation">Transportation</option>
+                    <option value="rent">Rent</option>
+                    <option value="debt payments">Debt Payments</option>
+                    <option value="other">Other</option>
+                  </select>
+                  {expense.category === 'other' && (
+                    <input
+                      type="text"
+                      value={expense.customCategory}
+                      onChange={(e) => handleExpenseChange(index, 'customCategory', e.target.value)}
+                      placeholder="Specify expense category"
+                      className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700"
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+            <button
+              onClick={addExpense}
+              className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            >
+              Add Expense
+            </button>
+          </div>
+
+          {/* Submit Button */}
+          <div className="mt-6">
+            <button className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              Analyze Spending
+            </button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Insights Section */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">AI-Driven Insights</h2>
+          <div className="space-y-4">
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-gray-700">Your spending on groceries is 25% higher than last month. Consider budgeting better.</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-gray-700">You saved 15% more this month compared to last month. Great job!</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-gray-700">Your income is stable, but your entertainment expenses have increased by 30%.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer className="border-t border-gray-200 mt-8 py-6 text-center">
+        <p className="text-gray-600">© 2021 FinTrack. All rights reserved.</p>
+        <p className="text-gray-500"> Powered by AI</p>
+        
+        </footer>
     </div>
   );
 }
