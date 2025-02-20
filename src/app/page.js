@@ -147,6 +147,20 @@ export default function FinanceTracker() {
               Add Expense
             </button>
           </div>
+          <div>
+          <h3 className="text-xl font-semibold text-gray-800 mb-4"></h3>
+
+
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">What are your financial goals?</h3>
+            <textarea
+            placeholder="Example: I want to save $500 this month, I want to pay off my debts, etc."
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700"
+            
+            />
+
+          </div>
 
           {/* Submit Button */}
           <div className="mt-6">
@@ -173,8 +187,11 @@ export default function FinanceTracker() {
         </div>
       </div>
       <footer className="border-t border-gray-200 mt-8 py-6 text-center">
-        <p className="text-gray-600">© 2021 FinTrack. All rights reserved.</p>
-        <p className="text-gray-500"> Powered by AI</p>
+        <p className="text-gray-600">© Created by Chris Alpuerto</p>
+        <a href="https://github.com/chrisalpuerto/FinTrack.git" target="blank" rel="noopener noreferrer">
+
+          <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="Github" className="gray-200 inline-block h-6 w-6"/>
+        </a>
         
         </footer>
     </div>
