@@ -9,6 +9,10 @@
 - ✅ **Modern UI** using **Next.js** and **Tailwind CSS**
 - ✅ **FastAPI Backend** for efficient API handling
 
+## Demo Pictures:
+![FinTrack UI](public/fintrack1.png)
+
+
 ## 🛠️ Tech Stack
 - **Frontend:** [Next.js](https://nextjs.org/) + [Tailwind CSS](https://tailwindcss.com/)
 - **Backend:** [FastAPI](https://fastapi.tiangolo.com/)
