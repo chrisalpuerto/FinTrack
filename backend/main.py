@@ -29,7 +29,7 @@ class FinanceData(BaseModel):
 def analyze_spending(data: FinanceData):
     prompt = f"""
     Analyze the following financial data, and provide insights on how the user can be finacially better and achieve their financial goals. If they are doing well already, state that.:
-    **Income:** 
+    **Income:**
     {data.incomes}
     **Expenses:**
     {data.expenses}
@@ -41,7 +41,7 @@ def analyze_spending(data: FinanceData):
         model="gpt-3.5-turbo",
         messages=[{"role": "system", "content": "You are a financial assistant. Help the user with their financial goals by providing insights based on their income and expenses. Keep your response fit the {max_tokens} token limit. No bold letters as well, do not have '**' in your responses. Inputs will be for monthly data."},
                   {"role": "user", "content": prompt}],
-        max_tokens=150
+        max_tokens=500
     )
 
 
