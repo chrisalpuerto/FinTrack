@@ -11,6 +11,7 @@
 
 ## 📷 Demo Pictures:
 ![FinTrack UI](public/fintrack1.png)
+![FinTrack UI](public/fintrack2.png)
 ![FinTrack UI](public/fintrack3.png)
 
 
