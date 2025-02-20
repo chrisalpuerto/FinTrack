@@ -1,15 +1,17 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import openai
+from openai import OpenAI
 from dotenv import load_dotenv
 import os
 from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -21,14 +23,26 @@ app.add_middleware(
 class FinanceData(BaseModel):
     incomes: list
     expenses: list
+    goals: str
 
-@app.post("/page")
-def analyze_finance(data: FinanceData):
-    response = openai.Completion.create(
+@app.post("/analyze-spending")
+def analyze_spending(data: FinanceData):
+    prompt = f"""
+    Analyze the following financial data, and provide insights on how the user can be finacially better and achieve their financial goals. If they are doing well already, state that.:
+    **Income:** 
+    {data.incomes}
+    **Expenses:**
+    {data.expenses}
+    **Financial Goals:**
+    {data.goals}
+    """
+
+    chat_completions = openai.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[],
+        messages=[{"role": "system", "content": "You are a financial assistant. Help the user with their financial goals by providing insights based on their income and expenses. Keep your response fit the {max_tokens} token limit. No bold letters as well, do not have '**' in your responses. Inputs will be for monthly data."},
+                  {"role": "user", "content": prompt}],
         max_tokens=150
     )
 
 
-    return {}
+    return {"analysis": chat_completions.choices[0].message.content}

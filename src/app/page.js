@@ -6,6 +6,10 @@ export default function FinanceTracker() {
   const [incomes, setIncomes] = useState([{ amount: '', type: 'salary', customType: '' }]);
   const [expenses, setExpenses] = useState([{ amount: '', category: 'groceries', customCategory: '' }]);
   const [isClient, setIsClient] = useState(false);
+  const [insights, setInsights] = useState('');
+  const [goals, setGoals] = useState("");
+  const [incomeMonthly, setIncomeMonthly] = useState('');
+  const [expenseMonthly, setExpenseMonthly] = useState('');
 
   useEffect(() => {
     setIsClient(true);
@@ -38,7 +42,25 @@ export default function FinanceTracker() {
     updatedExpenses[index][field] = value;
     setExpenses(updatedExpenses);
   };
-
+  const handleDollarInput = (index, e) => {
+    const value = e.target.value.replace(/[^0-9.]/g, '');
+    handleIncomeChange(index, 'amount', value);
+  };
+  const handleDollarInputExpense = (index, e) => {
+    const value = e.target.value.replace(/[^0-9.]/g, '');
+    handleExpenseChange(index, 'amount', value);
+  };
+  const analyzeSpending = async () => {
+    const response = await fetch('api/analyze-spending', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ incomes, expenses, goals }),
+    });
+    const data = await response.json();
+    setInsights(data.analysis);
+  };
   return (
     <div className="bg-gray-100 min-h-screen font-sans">
       <div className="container mx-auto px-4 py-8">
@@ -52,18 +74,21 @@ export default function FinanceTracker() {
 
           {/* Incomes Section */}
           <div className="mb-8">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Incomes</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Incomes (monthly)</h3>
             {incomes.map((income, index) => (
               <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Income Amount</label>
-                  <input
-                    type="number"
-                    value={income.amount}
-                    onChange={(e) => handleIncomeChange(index, 'amount', e.target.value)}
-                    placeholder="Enter income amount"
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700"
-                  />
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
+                    <input
+                      type="text"
+                      value={income.amount}
+                      onChange={(e) => handleDollarInput(index, e)}
+                      placeholder="Enter income amount"
+                      className="mt-1 block w-full pl-7 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700"
+                    />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Income Type</label>
@@ -100,18 +125,21 @@ export default function FinanceTracker() {
 
           {/* Expenses Section */}
           <div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Expenses</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Expenses (monthly)</h3>
             {expenses.map((expense, index) => (
               <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Expense Amount</label>
-                  <input
-                    type="number"
-                    value={expense.amount}
-                    onChange={(e) => handleExpenseChange(index, 'amount', e.target.value)}
-                    placeholder="Enter expense amount"
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700"
-                  />
+                  <div className="relative">
+                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
+                    <input
+                      type="text"
+                      value={expense.amount}
+                      onChange={(e) => handleDollarInputExpense(index, e)}
+                      placeholder="Enter expense amount"
+                      className="mt-1 block w-full pl-7 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700"
+                    />
+                    </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Expense Category</label>
@@ -155,6 +183,8 @@ export default function FinanceTracker() {
           <div>
             <h3 className="text-xl font-semibold text-gray-800 mb-4">What are your financial goals?</h3>
             <textarea
+            value={goals}
+            onChange={(e) => setGoals(e.target.value)}
             placeholder="Example: I want to save $500 this month, I want to pay off my debts, etc."
             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700"
             
@@ -164,7 +194,9 @@ export default function FinanceTracker() {
 
           {/* Submit Button */}
           <div className="mt-6">
-            <button className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            <button 
+            onClick={analyzeSpending}
+            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
               Analyze Spending
             </button>
           </div>
@@ -174,7 +206,13 @@ export default function FinanceTracker() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">AI-Driven Insights</h2>
           <div className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
+            {insights ? (
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-gray-700">{insights}</p>
+              </div>
+            ) : (
+              <>
+              <div className="bg-gray-50 p-4 rounded-lg">
               <p className="text-gray-700">Your spending on groceries is 25% higher than last month. Consider budgeting better.</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
@@ -183,6 +221,10 @@ export default function FinanceTracker() {
             <div className="bg-gray-50 p-4 rounded-lg">
               <p className="text-gray-700">Your income is stable, but your entertainment expenses have increased by 30%.</p>
             </div>
+            </>
+            )}
+
+
           </div>
         </div>
       </div>
