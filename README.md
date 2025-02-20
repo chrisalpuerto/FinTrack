@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📊 FinTrack - AI-Powered Finance Tracker
 
-## Getting Started
+**FinTrack** is an AI-powered finance tracker that helps users manage their **monthly income, expenses, and financial goals**. It leverages **OpenAI's API** to provide intelligent insights and suggestions to improve budgeting and achieve financial success.
 
-First, run the development server:
+## 🚀 Features
+- ✅ **Track Monthly Income & Expenses**
+- ✅ **Set and Manage Financial Goals**
+- ✅ **AI-Driven Insights** on spending habits and budget improvements
+- ✅ **Modern UI** using **Next.js** and **Tailwind CSS**
+- ✅ **FastAPI Backend** for efficient API handling
 
+## 🛠️ Tech Stack
+- **Frontend:** [Next.js](https://nextjs.org/) + [Tailwind CSS](https://tailwindcss.com/)
+- **Backend:** [FastAPI](https://fastapi.tiangolo.com/)
+- **AI Processing:** [OpenAI API](https://openai.com/api/)
+
+
+## 🔧 Installation & Setup
+### **1️⃣ Clone the Repository**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-username/FinTrack.git
+cd FinTrack
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### **2️⃣ Set Up the Backend (FastAPI)**
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+pip install -r requirements.txt
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Create a `.env` file in the `backend/` folder and add your OpenAI API key:
+```
+OPENAI_API_KEY=your-openai-api-key
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Start the FastAPI server:
+```bash
+uvicorn main:app --reload
+```
 
-## Learn More
+### **3️⃣ Set Up the Frontend (Next.js)**
+```bash
+cd ../src
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Your app should now be running at **http://localhost:3000**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ⚡ Usage
+1. Enter your **income and expenses**.
+2. Set **financial goals**.
+3. Click **Analyze Spending**.
+4. View **AI-generated insights** to improve financial health.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠 API Endpoints
+| Method | Endpoint                | Description                     |
+|--------|-------------------------|---------------------------------|
+| POST   | `/api/analyze-spending` | Processes financial insights    |
 
-## Deploy on Vercel
+## 🏗️ Future Improvements
+- 📊 **Visual Charts** for spending trends
+- 🔔 **Notifications** for savings goals
+- 🔄 **Historical Data Analysis**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🏆 Contributors
+- **Chris Alpuerto** ([GitHub](https://github.com/chrisalpuerto))
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+💡 **Start tracking your finances with AI-powered insights today!**
+
