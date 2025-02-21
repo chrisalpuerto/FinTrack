@@ -24,7 +24,7 @@
 ## 🔧 Installation & Setup
 ### **1️⃣ Clone the Repository**
 ```bash
-git clone https://github.com/your-username/FinTrack.git
+git clone https://github.com/chrisalpuerto/FinTrack.git
 cd FinTrack
 ```
 
