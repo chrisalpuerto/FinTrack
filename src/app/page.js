@@ -28,9 +28,9 @@ export default function LoginPage() {
             FinTrack AI: <br /> AI-Powered Finance Tracker
           </h2>
           <p className="mt-4 text-gray-600 text-lg">
-            Join thousands of professionals who apply AI to optimize their job applications.
-            Use our AI-powered resume builder and more to create tailored resumes and cover
-            letters for specific jobs.
+            Use FinTrack AI today to track your finances and investments.
+            Get real-time insights and analysis on your spending habits with the power of AI.
+            
           </p>
           <form onSubmit={handleChange}>
           <button className="mt-6 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700">

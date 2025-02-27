@@ -10,6 +10,7 @@
 - ✅ **FastAPI Backend** for efficient API handling
 
 ## 📷 Demo Pictures:
+![FinTrack UI](public/fintrackLandingPage.png)
 ![FinTrack UI](public/fintrack1.png)
 ![FinTrack UI](public/fintrack2.png)
 ![FinTrack UI](public/fintrack3.png)
