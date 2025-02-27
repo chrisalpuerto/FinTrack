@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import os
 from fastapi.middleware.cors import CORSMiddleware
 
+
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -28,7 +29,7 @@ class FinanceData(BaseModel):
 @app.post("/analyze-spending")
 def analyze_spending(data: FinanceData):
     prompt = f"""
-    Analyze the following financial data, and provide insights on how the user can be finacially better and achieve their financial goals. If they are doing well already, state that.:
+    Analyze the following financial data, and provide insights on how the user can be finacially better and achieve their financial goals. If they are doing well already, state that. Do not use bold letters:
     **Income:**
     {data.incomes}
     **Expenses:**

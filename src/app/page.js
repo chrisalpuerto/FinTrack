@@ -1,241 +1,55 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function FinanceTracker() {
-  const [incomes, setIncomes] = useState([{ amount: '', type: 'salary', customType: '' }]);
-  const [expenses, setExpenses] = useState([{ amount: '', category: 'groceries', customCategory: '' }]);
-  const [isClient, setIsClient] = useState(false);
-  const [insights, setInsights] = useState('');
-  const [goals, setGoals] = useState("");
-  const [incomeMonthly, setIncomeMonthly] = useState('');
-  const [expenseMonthly, setExpenseMonthly] = useState('');
+export default function LoginPage() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    return null;
-  }
-
-  // Handle adding a new income field
-  const addIncome = () => {
-    setIncomes([...incomes, { amount: '', type: 'salary', customType: '' }]);
+  const handleChange = (e) => {
+    e.preventDefault();
+    // Perform login logic here
+    // For demonstration, we'll just redirect to the finance tracker page
+    router.push('/FinanceTracker');
   };
 
-  // Handle adding a new expense field
-  const addExpense = () => {
-    setExpenses([...expenses, { amount: '', category: 'groceries', customCategory: '' }]);
-  };
-
-  // Handle income input changes
-  const handleIncomeChange = (index, field, value) => {
-    const updatedIncomes = [...incomes];
-    updatedIncomes[index][field] = value;
-    setIncomes(updatedIncomes);
-  };
-
-  // Handle expense input changes
-  const handleExpenseChange = (index, field, value) => {
-    const updatedExpenses = [...expenses];
-    updatedExpenses[index][field] = value;
-    setExpenses(updatedExpenses);
-  };
-  const handleDollarInput = (index, e) => {
-    const value = e.target.value.replace(/[^0-9.]/g, '');
-    handleIncomeChange(index, 'amount', value);
-  };
-  const handleDollarInputExpense = (index, e) => {
-    const value = e.target.value.replace(/[^0-9.]/g, '');
-    handleExpenseChange(index, 'amount', value);
-  };
-  const analyzeSpending = async () => {
-    const response = await fetch('api/analyze-spending', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ incomes, expenses, goals }),
-    });
-    const data = await response.json();
-    setInsights(data.analysis);
-  };
   return (
-    <div className="bg-gray-100 min-h-screen font-sans">
-      <div className="container mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800">FinTrack</h1>
-          <p className="text-gray-600 mt-2">Track your income, expenses, and get AI-driven insights.</p>
-        </header>
-
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Add Your Financial Data</h2>
-
-          {/* Incomes Section */}
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Incomes (monthly)</h3>
-            {incomes.map((income, index) => (
-              <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Income Amount</label>
-                  <div className="relative">
-                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
-                    <input
-                      type="text"
-                      value={income.amount}
-                      onChange={(e) => handleDollarInput(index, e)}
-                      placeholder="Enter income amount"
-                      className="mt-1 block w-full pl-7 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Income Type</label>
-                  <select
-                    value={income.type}
-                    onChange={(e) => handleIncomeChange(index, 'type', e.target.value)}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-600"
-                  >
-                    <option value="salary">Salary (Job)</option>
-                    <option value="sideHustle">Side Hustle</option>
-                    <option value="freelance">Freelance</option>
-                    <option value="investment">Investment</option>
-                    <option value="other">Other</option>
-                  </select>
-                  {income.type === 'other' && (
-                    <input
-                      type="text"
-                      value={income.customType}
-                      onChange={(e) => handleIncomeChange(index, 'customType', e.target.value)}
-                      placeholder="Specify income type"
-                      className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-50 text-gray-700"
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
-            <button
-              onClick={addIncome}
-              className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-            >
-              Add Income
-            </button>
-          </div>
-
-          {/* Expenses Section */}
-          <div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Expenses (monthly)</h3>
-            {expenses.map((expense, index) => (
-              <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Expense Amount</label>
-                  <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
-                    <input
-                      type="text"
-                      value={expense.amount}
-                      onChange={(e) => handleDollarInputExpense(index, e)}
-                      placeholder="Enter expense amount"
-                      className="mt-1 block w-full pl-7 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700"
-                    />
-                    </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Expense Category</label>
-                  <select
-                    value={expense.category}
-                    onChange={(e) => handleExpenseChange(index, 'category', e.target.value)}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-600"
-                  >
-                    <option value="groceries">Groceries</option>
-                    <option value="entertainment">Entertainment</option>
-                    <option value="utilities">Utilities</option>
-                    <option value="transportation">Transportation</option>
-                    <option value="rent">Rent</option>
-                    <option value="debt payments">Debt Payments</option>
-                    <option value="other">Other</option>
-                  </select>
-                  {expense.category === 'other' && (
-                    <input
-                      type="text"
-                      value={expense.customCategory}
-                      onChange={(e) => handleExpenseChange(index, 'customCategory', e.target.value)}
-                      placeholder="Specify expense category"
-                      className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700"
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
-            <button
-              onClick={addExpense}
-              className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-            >
-              Add Expense
-            </button>
-          </div>
-          <div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-4"></h3>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white px-6 md:px-12">
+      <nav className="w-full flex justify-between items-center py-4">
+        <h1 className="text-3xl font-bold text-indigo-600"></h1>
+      </nav>
+      
+      <div className="flex flex-col-reverse md:flex-row items-center justify-between w-full max-w-6xl mt-12">
+        {/* Left Side */}
+        <div className="md:w-1/2 text-center md:text-left">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+            FinTrack AI: <br /> AI-Powered Finance Tracker
+          </h2>
+          <p className="mt-4 text-gray-600 text-lg">
+            Join thousands of professionals who apply AI to optimize their job applications.
+            Use our AI-powered resume builder and more to create tailored resumes and cover
+            letters for specific jobs.
+          </p>
+          <form onSubmit={handleChange}>
+          <button className="mt-6 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700">
+            Get Started for Free
+          </button>
 
 
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">What are your financial goals?</h3>
-            <textarea
-            value={goals}
-            onChange={(e) => setGoals(e.target.value)}
-            placeholder="Example: I want to save $500 this month, I want to pay off my debts, etc."
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-700"
-            
-            />
-
-          </div>
-
-          {/* Submit Button */}
-          <div className="mt-6">
-            <button 
-            onClick={analyzeSpending}
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-              Analyze Spending
-            </button>
-          </div>
+          </form>
         </div>
-
-        {/* Insights Section */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">AI-Driven Insights</h2>
-          <div className="space-y-4">
-            {insights ? (
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="text-gray-700">{insights}</p>
-              </div>
-            ) : (
-              <>
-              <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-gray-700">Your spending on groceries is 25% higher than last month. Consider budgeting better.</p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-gray-700">You saved 15% more this month compared to last month. Great job!</p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-gray-700">Your income is stable, but your entertainment expenses have increased by 30%.</p>
-            </div>
-            </>
-            )}
-
-
-          </div>
+        
+        {/* Right Side - Mockup Image */}
+        <div className="md:w-1/2 flex justify-center">
+          <img
+            src="/FinanceImage.jpg"
+            alt="App Preview"
+            className="w-full md:w-4/5 rounded-lg shadow-lg border border-gray-200"
+          />
         </div>
       </div>
-      <footer className="border-t border-gray-200 mt-8 py-6 text-center">
-        <p className="text-gray-600">© Created by Chris Alpuerto</p>
-        <a href="https://github.com/chrisalpuerto/FinTrack.git" target="blank" rel="noopener noreferrer">
-
-          <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="Github" className="gray-200 inline-block h-6 w-6"/>
-        </a>
-        
-        </footer>
     </div>
   );
 }
