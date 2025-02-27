@@ -44,9 +44,9 @@ export default function LoginPage() {
         {/* Right Side - Mockup Image */}
         <div className="md:w-1/2 flex justify-center">
           <img
-            src="/FinanceImage.jpg"
+            src="/FinanceImageClear.png"
             alt="App Preview"
-            className="w-full md:w-4/5 rounded-lg shadow-lg border border-gray-200"
+            className="w-full md:w-4/5 rounded-lg shadow-lg ç"
           />
         </div>
       </div>
