@@ -15,6 +15,12 @@ export default function LoginPage() {
     router.push('/FinanceTracker');
   };
 
+  const handleLoginPage = (e) => {
+    e.preventDefault();
+
+    router.push('/Login');
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white px-6 md:px-12">
       <nav className="w-full flex justify-between items-center py-4">
@@ -32,6 +38,14 @@ export default function LoginPage() {
             Get real-time insights and analysis on your spending habits with the power of AI.
             
           </p>
+          <form onSubmit={handleLoginPage}>
+            <button className="mt-6 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700">
+              Login
+            </button>
+
+
+          </form>
+          
           <form onSubmit={handleChange}>
           <button className="mt-6 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700">
             Get Started for Free

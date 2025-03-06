@@ -15,6 +15,16 @@ export default function LoginPage() {
     router.push('/FinanceTracker');
   };
 
+  const handleContinueAsGuest = (e) => {
+    e.preventDefault();
+    router.push('/FinanceTracker')
+  };
+  
+  const handleRegisterChange = (e) => {
+    e.preventDefault();
+    router.push('/Register');
+  }
+
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center font-sans">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -47,6 +57,19 @@ export default function LoginPage() {
             Login
           </button>
         </form>
+        <form onSubmit={handleRegisterChange} className="mt-4">
+          <button className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            Register
+          </button>
+        </form>
+        <form onSubmit={handleContinueAsGuest} className="mt-4">
+          {/*w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" */}
+          
+        <button className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              Continue as Guest
+            </button>
+        </form>
+
       </div>
     </div>
   );
