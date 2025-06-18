@@ -1,16 +1,10 @@
-from fastapi import FastAPI, status, HTTPException, Depends
+from fastapi import FastAPI, status
 from pydantic import BaseModel
 import openai
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
-from mysql.connector import connect, Error
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Annotated
-import models
-from database import engine, SessionLocal
-from sqlalchemy.orm import Session
-
 
 load_dotenv()
 
@@ -26,21 +20,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-models.Base.metadata.create_all(bind=engine)
-
-class PostBase(BaseModel):
-    title: str
-    content: str
-    user_id: int
 class UserBase(BaseModel):
     username: str
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-db_dependency = Annotated[Session, Depends(get_db)]
 
 class FinanceData(BaseModel):
     incomes: list
@@ -48,32 +29,28 @@ class FinanceData(BaseModel):
     goals: str
     incomeMonthly: str
 
-@app.post("/users/", status_code=status.HTTP_201_CREATED)
-async def create_user(user: UserBase, db: db_dependency):
-    db_user = models.User(**user.dict())
-    db.add(user)
-    db.commit()
+@app.post("/users/")
+def fake_create_user(user: UserBase):
+    return {"message": f"User {user.username} received (not stored)"}
 
 @app.post("/analyze-spending")
 def analyze_spending(data: FinanceData):
     prompt = f"""
-    Analyze the following financial data, and provide insights on how the user can be finacially better and achieve their financial goals. If they are doing well already, state that. Do not use bold lettrs and any '**' characters in your response.:
-    **Income:**
-    {data.incomes}
-    **Expenses:**
-    {data.expenses}
-    **Financial Goals:**
-    {data.goals}
-    **Income Monthly or Yearly or Weekly:**
-    {data.incomeMonthly}
+    Analyze the following financial data, and provide insights on how the user can be financially better and achieve their financial goals. If they are doing well already, state that. Do not use bold letters or any '**' characters in your response:
+    Income: {data.incomes}
+    Expenses: {data.expenses}
+    Financial Goals: {data.goals}
+    Income Frequency: {data.incomeMonthly}
     """
 
     chat_completions = openai.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "system", "content": "You are a financial assistant. Help the user with their financial goals by providing insights based on their income and expenses. Keep your response fit the {max_tokens} token limit. Do not use bold letters, do not have '**' characters in your response. Inputs will be for monthly data."},
-                  {"role": "user", "content": prompt}],
-        
+        max_tokens=1000,
+        temperature=0.8,
+        messages=[
+            {"role": "system", "content": "You are a financial assistant. Help the user with their financial goals by providing insights based on their income and expenses. Do not use bold letters or '**' characters."},
+            {"role": "user", "content": prompt}
+        ]
     )
-
 
     return {"analysis": chat_completions.choices[0].message.content}
